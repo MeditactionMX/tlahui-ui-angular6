@@ -1,5 +1,5 @@
 import { Observable } from "rxjs/Observable";
-
+import {UITable} from '../entities/dynamicforms/index';
 // This definition mus match backend IGenericrepository
 // Tlahui.Web.API\GenericRepository\IGenericRepository.cs
 
@@ -21,5 +21,7 @@ export interface IGenericrepository<T>{
     Delete(entityToDelete: T ): Observable<any>;
 
     Update(entityToUpdate: T ): Observable<T>;
+
+    GetMetadataTable(): Observable<UITable>;
 
 }

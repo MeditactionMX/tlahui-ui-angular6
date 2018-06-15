@@ -5,13 +5,13 @@ export enum DataType {
 }
 
 export class TableColumn  {
-    public DisplayByDefault: boolean;
-    public Searchable: boolean;
-    public DisplayIndex: number;
-    public Type: DataType;
-    public OutpuFormat: string;
-    public IsID: boolean;
-    public AlwaysHidden: boolean;
+    public DisplayByDefault?: boolean;
+    public Searchable?: boolean;
+    public DisplayIndex?: number;
+    public Type?: DataType;
+    public OutpuFormat?: string;
+    public IsID?: boolean;
+    public AlwaysHidden?: boolean;
 
     constructor(){
         

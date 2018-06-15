@@ -7,7 +7,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import 'hammerjs';
 
 import { Store, StoreModule } from '@ngrx/store';
-import { reducers }  from './main/common/state/reducers';
 
 
 import { FuseModule } from '@fuse/fuse.module';
@@ -23,23 +22,19 @@ import { AuthGuardService } from './auth/auth-guard.service';
 import { B2cLoginComponent } from './auth/b2c-login/b2c-login.component';
 import { AzureB2cService, TlahuiHttpInterceptor } from 'tlahui-webapi-client';
 
-import { ApiTestComponent } from './api-test/api-test.component';
-import { TlahuiApi } from '@API/rest/tlahui-api';
 
-import { SessionPropertiesProviderLocalstorage, ISessionPropertiesProvider  } from 'tlahui-webapi-client'; 
+import { SessionPropertiesProviderLocalstorage, ISessionPropertiesProvider  } from 'tlahui-webapi-client';
+import { HomePageComponent } from './home-page/home-page.component'; 
 
 const appRoutes: Routes = [
     {
         path: '',
-        component: B2cLoginComponent
+        component: HomePageComponent
     },
     {
-        path: 'api',
-        component: ApiTestComponent
-    }, 
-    {
         path: 'editor/:type',
-        loadChildren: './components/dynamic-editor/dynamic-editor.module#DynamicEditorModule'
+        loadChildren: './components/dynamic-editor/dynamic-editor.module#DynamicEditorModule',
+        canActivate: [AuthGuardService] 
     },
     {   path: 'login',
         component: B2cLoginComponent},
@@ -52,7 +47,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     declarations: [
-        AppComponent, B2cLoginComponent, ApiTestComponent
+        AppComponent, B2cLoginComponent, HomePageComponent
     ],
     imports     : [
         BrowserModule,
@@ -65,15 +60,16 @@ const appRoutes: Routes = [
         FuseSharedModule,
         FuseMainModule,
         FuseSampleModule,
-        StoreModule.forRoot(reducers)
+
     ],
     providers   : [
-         AuthGuardService, TlahuiApi,
+         AuthGuardService, 
         {  provide: HTTP_INTERCEPTORS,
             useClass: TlahuiHttpInterceptor,
             multi: true
          }, 
-         {provide: 'ISessionPropertiesProvider', useClass: SessionPropertiesProviderLocalstorage}
+         {provide: 'ISessionPropertiesProvider', useClass: SessionPropertiesProviderLocalstorage},
+         AzureB2cService
          
     ],
     bootstrap   : [

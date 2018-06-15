@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Seleccione  </h1>
+
+<div mat-dialog-content >
+  <table class="control-full-width">
+    <tr>
+      <td>
+        <table>
+          <tr>
+            <td>
+                <mat-form-field>
+                    <mat-select placeholder="Seleccione un campo" [(ngModel)]="SelectedValue">
+                      <mat-option *ngFor="let col of AvailableColumns" value="{{col.ShortId}}">{{col.Traslation}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </td>
+            <td>
+                <button mat-mini-fab color="default" (click)="AddFiltered()">
+                    <mat-icon aria-label="Añadir columnas">add</mat-icon>
+                </button>
+            </td>
+          </tr>
+        </table>
+        
+      </td>
+    </tr>
+    <tr>
+        <td>
+            <app-dynamic-table-field-search  *ngFor="let item of FilteredColumns" [SearchField]="item">
+              </app-dynamic-table-field-search>
+        </td>
+      </tr>
+  </table>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.columns" cdkFocusInitial>Ok</button>
+</div>
