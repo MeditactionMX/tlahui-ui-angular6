@@ -6,7 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { QueryOptions } from '../common/query.options';
 import { IGenericrepository } from '../common/i-generic-repository';
- 
+import { UITable } from '../entities/dynamicforms/index'; 
  
 export class HTTPResourceService<T> implements IGenericrepository<T> {
  
@@ -66,6 +66,14 @@ export class HTTPResourceService<T> implements IGenericrepository<T> {
     );
   }
     
+  GetMetadataTable(): Observable<UITable>{
+    return this.http.get<UITable>(`${this.url}/${this.endpoint}/metadata/table`)
+        .pipe(
+          retry(3), 
+          catchError(this.handleError) 
+        );
+  }
+
     private handleError(error: HttpErrorResponse) {
       if (error.error instanceof ErrorEvent) {
         // A client-side or network error occurred. Handle it accordingly.

@@ -7,9 +7,8 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 
 import { locale as navigationEnglish } from './navigation/i18n/en';
 import { locale as navigationTurkish } from './navigation/i18n/tr';
-
-import { AuthGuardService } from './auth/auth-guard.service';
 import { AzureB2cService } from 'tlahui-webapi-client';
+import { Router } from '@angular/router';
 
 @Component({
     selector   : 'fuse-root',
@@ -19,14 +18,21 @@ import { AzureB2cService } from 'tlahui-webapi-client';
 export class AppComponent  implements OnInit
 {
     ngOnInit(): void {
+        if(!this.azureB2cService.isOnline()){
+            this.azureB2cService.login();
+
+        } else {
+
+            console.log( this.azureB2cService.getToken());
+        }
 
     }
+    
     constructor(
         private translate: TranslateService,
         private fuseNavigationService: FuseNavigationService,
         private fuseSplashScreen: FuseSplashScreenService,
         private fuseTranslationLoader: FuseTranslationLoaderService,
-        private authGuardService: AuthGuardService,
         private azureB2cService: AzureB2cService,
     )
     {
@@ -43,7 +49,5 @@ export class AppComponent  implements OnInit
         this.translate.use('en');
     }
 
-    public UserInSession(): boolean  {
-        return this.azureB2cService.isOnline();
-    }
+  
 }

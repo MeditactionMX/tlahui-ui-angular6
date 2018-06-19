@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApiTestComponent } from './api-test.component';
+import { DynamicTableSearchComponent } from './dynamic-table-search.component';
 
-describe('ApiTestComponent', () => {
-  let component: ApiTestComponent;
-  let fixture: ComponentFixture<ApiTestComponent>;
+describe('DynamicTableSearchComponent', () => {
+  let component: DynamicTableSearchComponent;
+  let fixture: ComponentFixture<DynamicTableSearchComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApiTestComponent ]
+      declarations: [ DynamicTableSearchComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ApiTestComponent);
+    fixture = TestBed.createComponent(DynamicTableSearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
