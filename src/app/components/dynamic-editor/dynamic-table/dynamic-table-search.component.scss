@@ -1,21 +1,5 @@
- 
-.control-full-width {
-    width: 100%;
-}
 
-.control-half-width {
-    width: 50%;
-}
-
-.control-quarter-width {
-    width: 25%;
-}
-
-
-.cell-sep {
-    width: 10px;
-}
-
-.cel-align-top {
-    vertical-align: top;
-}
+  .flex-wrap {
+    display: flex;
+    flex-flow: row wrap;
+  }

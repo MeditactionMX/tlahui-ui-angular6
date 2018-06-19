@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DynamicTableColumn } from '../../model/dynamic-form/dynamic-table-column';
 import { MatFormField } from '@angular/material';
 import { SearchComparer, DataType, SearchOperand } from 'tlahui-webapi-client';
@@ -14,35 +14,41 @@ export class DynamicTableFieldSearchComponent implements OnInit {
   
   @Input() SearchField: DynamicTableColumn;
   private selectedValue: string;
-    private Field: DynamicTableColumn;
+  private Field: DynamicTableColumn;
   private Operators: Array<SearchComparer>
   public dataType = DataType;
   public Search: SearchOperand;
+  public searchComparer=SearchComparer;
   private searchForm: FormGroup;
+  public selectedV1: string;
+
+  @Output() remove = new EventEmitter<string>();
+  
+
 
   constructor(private fb: FormBuilder) {
-
-    this.searchForm = fb.group({
-      Comparer: new FormControl(),
-      Negation: null,
-      Value1: new FormControl(),
-      Value2: new FormControl(),
-    });
-
+      this.searchForm=this.createFormGroupWithBuilder(fb);    
    }
 
-  ngOnInit() {
 
-
-
-
-    this.Field=this.SearchField;
-    this.SetOperands();
-      this.selectedValue="0";
-      this.Search = new SearchOperand();
-      this.Search.FromUIColumn(this.SearchField);
+   createFormGroupWithBuilder(formBuilder: FormBuilder) {
+    return formBuilder.group({
+      Value1:'', Value2:'', Comparer:0, Negation: null 
+    });
   }
 
+  ngOnInit() {
+    this.Field=this.SearchField;
+    this.SetOperands();
+    this.selectedValue="0";
+    this.Search = new SearchOperand();
+    this.Search.FromUIColumn(this.SearchField); 
+  }
+
+
+  public delete(ShortId:string){
+      this.remove.emit(ShortId);
+  }
   
   public GetSearch() : SearchOperand{
     this.Search.Comparer = SearchComparer.none;
@@ -53,6 +59,17 @@ export class DynamicTableFieldSearchComponent implements OnInit {
   }
 
 
+  public GetComparer(){
+    return this.searchForm.get('Comparer').value;
+  }
+
+  public GetValue2FieldW(){
+    if(this.searchForm.get('Comparer').value==this.searchComparer.between){
+      return "45";
+    } else {
+      return "100";
+    }
+  }
 
   private GetOperandText(c: SearchComparer): string{
     switch(c){

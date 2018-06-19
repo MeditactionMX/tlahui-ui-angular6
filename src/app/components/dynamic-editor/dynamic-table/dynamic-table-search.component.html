@@ -1,38 +1,45 @@
-<h1 mat-dialog-title>Seleccione  </h1>
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+      <span fxFlex="50">Buscar</span>
+      <div fxFlex fxLayoutAlign="end center">
+        <mat-form-field>
+          <mat-select placeholder="" [(ngModel)]="SelectedValue">
+            <mat-option *ngFor="let col of Columns" value="{{col.ShortId}}">{{col.Traslation}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        &nbsp;
+        <button mat-mini-fab color="default" (click)="AddFiltered()">
+          <mat-icon aria-label="Añadir columnas">add</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
 
-<div mat-dialog-content >
-  <table class="control-full-width">
-    <tr>
-      <td>
-        <table>
-          <tr>
-            <td>
-                <mat-form-field>
-                    <mat-select placeholder="Seleccione un campo" [(ngModel)]="SelectedValue">
-                      <mat-option *ngFor="let col of AvailableColumns" value="{{col.ShortId}}">{{col.Traslation}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-            </td>
-            <td>
-                <button mat-mini-fab color="default" (click)="AddFiltered()">
-                    <mat-icon aria-label="Añadir columnas">add</mat-icon>
-                </button>
-            </td>
-          </tr>
-        </table>
+<mat-accordion>
+  <mat-expansion-panel [expanded]="searchPanelOpenState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
         
-      </td>
-    </tr>
-    <tr>
-        <td>
-            <app-dynamic-table-field-search  *ngFor="let item of FilteredColumns" [SearchField]="item">
-              </app-dynamic-table-field-search>
-        </td>
-      </tr>
-  </table>
+      </mat-panel-title>
+      <mat-panel-description>
+        <div [hidden]="getHumannReadable()==''">
+            {{getHumannReadable()}}
+        </div>
+        
+      </mat-panel-description>
+    </mat-expansion-panel-header>
 
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.columns" cdkFocusInitial>Ok</button>
-</div>
+    <div [fxLayout]="getFlexOrientation()"  fxLayoutAlign="start start" fxLayoutGap="10px" class="flex-wrap">
+        <span *ngFor="let item of FilteredColumns">  
+            <app-dynamic-table-field-search fxFlex (remove)="removeItem($event)" 
+              [SearchField]="item">
+            </app-dynamic-table-field-search>
+          </span>
+
+    </div>
+
+  </mat-expansion-panel>
+
+</mat-accordion>

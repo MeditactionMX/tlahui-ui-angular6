@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input, HostListener } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef , MatCheckbox } from '@angular/material';
 import { DynamicTableColumn } from '../../model/dynamic-form/dynamic-table-column';
 
@@ -9,43 +9,81 @@ import { DynamicTableColumn } from '../../model/dynamic-form/dynamic-table-colum
 })
 export class DynamicTableSearchComponent implements OnInit {
 
-private AvailableColumns:Array<DynamicTableColumn>;
+@Input() Columns:Array<DynamicTableColumn>;
 private FilteredColumns:Array<DynamicTableColumn>;
 private SelectedValue:string;
+protected searchPanelOpenState: boolean; 
+public innerWidth: any;
 
+@HostListener('window:resize', ['$event'])
+
+
+onResize(event) {
+  this.innerWidth = window.innerWidth;
+}
 
   ngOnInit(): void {
     this.SelectedValue="";
+    this.searchPanelOpenState=false;
+    this.innerWidth = window.innerWidth;
   }
   
-
-  constructor(
-    public dialogRef: MatDialogRef<DynamicTableSearchComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any)  {
-      this.AvailableColumns= data.columns;
+  constructor()  {
       this.FilteredColumns=[];
      }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+
+  getFlexOrientation(): string {
+
+    if (this.innerWidth < 600) {
+      return "column";
+    }
+
+    return "row";
+  }
+
+
+  removeItem(ShortId:string){
+
+    let col = Object.assign({}, this.FilteredColumns.filter(x => x.ShortId == ShortId)[0]);
+    this.FilteredColumns = this.FilteredColumns.filter(function (obj) {
+      return obj.ShortId !== ShortId;
+    });
+    
+    this.Columns.push(col);
+
+  }
+
+  getHumannReadable(): string{
+
+    let s: string = "";
+    this.FilteredColumns.forEach(element => {
+      s = s + ", " +  element.Traslation;
+    });
+
+    if(s!=""){
+      s= "Filtrando por: " + s;
+    }
+    
+
+    return s;
+
   }
 
   AddFiltered() {
 
-    console.log(this.SelectedValue + "=");
-    
     if (this.SelectedValue != "") {
       let value = this.SelectedValue;
-      let col = Object.assign({}, this.AvailableColumns.filter(x => x.ShortId == this.SelectedValue)[0]);
+      let col = Object.assign({}, this.Columns.filter(x => x.ShortId == this.SelectedValue)[0]);
 
-      this.AvailableColumns = this.AvailableColumns.filter(function (obj) {
+      this.Columns = this.Columns.filter(function (obj) {
         return obj.ShortId !== value;
       });
 
       this.FilteredColumns.push(col);
 
       this.SelectedValue="";
-
+      this.searchPanelOpenState=true;
     }
   }
 

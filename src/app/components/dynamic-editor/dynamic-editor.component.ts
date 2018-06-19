@@ -15,8 +15,6 @@ private sub: any;
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
        this.ComponentName = params['type'];
- 
- 
     });
   }
 

@@ -21,6 +21,7 @@ export class DynamicTableComponent implements OnInit {
   protected anyErrors: boolean;
   protected tablemetadata: UITable;
   protected PickColumns: Array<DynamicTableColumn>;
+  protected SearchColumns: Array<DynamicTableColumn>;
 
   @Input() ComponentName:string;
 
@@ -48,6 +49,8 @@ export class DynamicTableComponent implements OnInit {
       this.ready=true;
       this.PickColumns=  this.GetColumnsCopy(this.tablemetadata.Columns, true, false);
 
+      this.SearchColumns=  this.GetColumnsCopy(this.tablemetadata.Columns, false,true);
+     
      },
      error => this.anyErrors = true,
      () => this.finished = true);

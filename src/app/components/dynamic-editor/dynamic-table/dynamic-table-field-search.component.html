@@ -1,49 +1,107 @@
-<div fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-md="row">
-
-    <!-- REACTIVE FORM EXAMPLE -->
-
-    <form class="mat-white-bg mat-elevation-z4 p-24 mr-24 mb-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="searchForm"
-        [formGroup]="searchForm">
-
-        <div class="h2 mb-24"> {{SearchField.Traslation}} </div>
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-
-
-            <mat-form-field fxFlex="34">
-                <mat-select placeholder="Comparer" formControlName="Comparer" required>
-                    <mat-option *ngFor="let Op of Operators" value="{{Op}}">{{GetOperandText(Op)}}</mat-option>
-                    <mat-error *ngIf="1==0">
-                        Country is required!
-                    </mat-error>
-                </mat-select>
-            </mat-form-field>
-
-        
-
-            <span [ngSwitch]="SearchField.Type">
-
-                <mat-form-field fxFlex="33" *ngSwitchCase="dataType.text">
-                    <input matInput placeholder="*" formControlName="Value1" required>
-                    <mat-error *ngIf="1==0">
-                        is required!
-                    </mat-error>
-                </mat-form-field>
-
-
-                <span *ngSwitchDefault>
-                    NF
+<div class="fuse-card">
+    <form [formGroup]="searchForm" fxLayout="column" novalidate>
+        <div class="p-8">
+            <div fxLayout="row">
+                <div fxFlex="75%" fxLayoutAlign="start center" class="h2 primary-text">{{SearchField.Traslation}}</div>
+                <span fxFlex fxLayoutAlign="end center">
+                    <button mat-icon-button aria-label="send location" (click)="delete(SearchField.ShortId)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </span>
-
-            </span>
-
+            </div>
         </div>
 
+        <div class="p-8">
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <mat-checkbox fxFlex="50" formControlName="Comparer"  [hidden]="SearchField.Type==dataType.boolean">No</mat-checkbox>
+                <mat-form-field fxFlex="50">
+                    <mat-select placeholder="Filtro" formControlName="Comparer" required>
+                        <mat-option *ngFor="let Op of Operators" value="{{Op}}">{{GetOperandText(Op)}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div fxFlex="50"   [hidden]="!SearchField.Type==dataType.boolean">&nbsp;</div>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="center center">
+
+                <!--Tipo texto-->
+                <mat-form-field fxFlex="100%" *ngIf="SearchField.Type==dataType.text">
+                    <input matInput placeholder="" formControlName="Value1" required>
+                </mat-form-field>
+
+                <!--Tipo lógico-->
+                <mat-form-field fxFlex="100%" *ngIf="SearchField.Type==dataType.boolean">
+                    <mat-select [(value)]="selectedV1">
+                        <mat-option>None</mat-option>
+                        <mat-option value="true">Si</mat-option>
+                        <mat-option value="false">No</mat-option>
+                      </mat-select>
+                </mat-form-field>
+
+                <!--Tipo entero-->
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="SearchField.Type==dataType.integer_number">
+                    <input matInput placeholder="" formControlName="Value1" type="number" required>
+                </mat-form-field>
+                <div fxFlex fxLayoutAlign="center" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.integer_number">
+                    &nbsp;y&nbsp;
+                </div>
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.integer_number">
+                    <input matInput placeholder="" formControlName="Value2" type="number" required>
+                </mat-form-field>
+
+                <!--Tipo decimal-->
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="SearchField.Type==dataType.decimal_number">
+                    <input matInput placeholder="" formControlName="Value1" type="number" required>
+                </mat-form-field>
+                <div fxFlex fxLayoutAlign="center" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.decimal_number">
+                    &nbsp;y&nbsp;
+                </div>
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.decimal_number">
+                    <input matInput placeholder="" formControlName="Value2" type="number" required>
+                </mat-form-field>
+
+                <!--Tipo fecha-->
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="SearchField.Type==dataType.date">
+                    <input matInput [owlDateTime]="dtV1" [owlDateTimeTrigger]="dtV1" placeholder="" formControlName="Value1">
+                    <owl-date-time [pickerType]="'calendar'" #dtV1></owl-date-time>
+                </mat-form-field>
+                <div fxFlex fxLayoutAlign="center" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.date">
+                    &nbsp;y&nbsp;
+                </div>
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.date">
+                    <input matInput [owlDateTime]="dtV2" [owlDateTimeTrigger]="dtV2" placeholder="" formControlName="Value2">
+                    <owl-date-time [pickerType]="'calendar'" #dtV2></owl-date-time>
+                </mat-form-field>
+
+                <!--Tipo fecha-hora -->
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="SearchField.Type==dataType.datetime">
+                    <input matInput [owlDateTime]="dtV1" [owlDateTimeTrigger]="dtV1" placeholder="" formControlName="Value1">
+                    <owl-date-time #dtV1></owl-date-time>
+                </mat-form-field>
+                <div fxFlex fxLayoutAlign="center" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.datetime">
+                    &nbsp;y&nbsp;
+                </div>
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.datetime">
+                    <input matInput [owlDateTime]="dtV2" [owlDateTimeTrigger]="dtV2" placeholder="" formControlName="Value2">
+                    <owl-date-time #dtV2></owl-date-time>
+                </mat-form-field>
+
+                <!--Tipo hora -->
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="SearchField.Type==dataType.time">
+                    <input matInput [owlDateTime]="dtV1" [owlDateTimeTrigger]="dtV1" placeholder="" formControlName="Value1">
+                    <owl-date-time [pickerType]="'timer'" #dtV1></owl-date-time>
+                </mat-form-field>
+                <div fxFlex fxLayoutAlign="center" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.time">
+                    &nbsp;y&nbsp;
+                </div>
+                <mat-form-field [fxFlex]="GetValue2FieldW()" *ngIf="GetComparer()==searchComparer.between && SearchField.Type==dataType.time">
+                    <input matInput [owlDateTime]="dtV2" [owlDateTimeTrigger]="dtV2" placeholder="" formControlName="Value2">
+                    <owl-date-time [pickerType]="'timer'" #dtV2></owl-date-time>
+                </mat-form-field>
+
+            </div>
 
 
+        </div>
     </form>
-
-    <!-- / REACTIVE FORM EXAMPLE -->
-
-
 </div>
